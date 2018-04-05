@@ -1,0 +1,57 @@
+
+
+
+//#include "DHT.h"
+
+//#define DHTPIN 2     // what digital pin we're connected to
+//#define DHTTYPE DHT11   // DHT 11
+
+//DHT dht(DHTPIN, DHTTYPE, 11);
+
+//TaskManager taskManager;
+
+#define CAYENNE_PRINT Serial
+#include <CayenneMQTTESP8266.h>
+
+char ssid[] = "SEE_WIFI_2A"; //SSID name
+char wifiPassword[] = "ppkeewifi";
+
+char username[] = "903134a0-38b5-11e8-822e-bbf389efce87";
+char password[] = "c6f539ce9cde24a19ac2feb5dc4b2f9cffd7a3c2";
+char clientID[] = "ccbe26d0-38b5-11e8-ab82-a3edb533e078";
+
+void setup() {
+//  if(taskManager.RestartedFromSleep()){
+//    //wake
+//    Serial.begin(9600);
+//  //  dht.begin();
+//    Cayenne.begin(username, password, clientID, ssid, wifiPassword);
+//  }
+  //else{
+    //normal boot
+    Serial.begin(9600);
+    //dht.begin();
+    Cayenne.begin(username, password, clientID, ssid, wifiPassword);
+  //}
+}
+
+void loop() {
+  Cayenne.loop();
+  // Read temperature as Fahrenheit (isFahrenheit = true)
+  float f =25.5; //= dht.readTemperature(true);
+
+  // Check if any reads failed and exit early (to try again).
+  if (isnan(f)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+  Cayenne.virtualWrite(0, f);
+  delay(5000);
+ // taskManager.EnterSleep(1000000 * 60 * 60 * 2); //Wait for 2 hours
+}
+
+CAYENNE_IN_DEFAULT()
+{
+  CAYENNE_LOG("CAYENNE_IN_DEFAULT(%u) - %s, %s", request.channel, getValue.getId(), getValue.asString());
+  //Process message here. If there is an error set an error message using getValue.setError(), e.g getValue.setError("Error message");
+}
