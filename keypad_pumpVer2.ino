@@ -7,6 +7,10 @@
 || | Demonstrates the simplest use of the matrix Keypad library.
 || #
 */
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+//I2C pins declaration
+LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); 
 #include <Keypad.h>
 
 const byte ROWS = 4; //four rows
@@ -36,6 +40,10 @@ int flag2;
 void setup(){
   Serial.begin(9600);
   Serial.println();
+  //===
+  lcd.begin(16,2);//Defining 16 columns and 2 rows of lcd display
+lcd.backlight();//To Power ON the back light
+//lcd.noBacklight();// To Power OFF the back light
 //===
 pinMode(pump, OUTPUT);  // sets the pin as output
   pinMode(inp1, OUTPUT);
@@ -53,6 +61,10 @@ pinMode(pump, OUTPUT);  // sets the pin as output
   bool maxNum=0;
 void loop(){
 start:;
+lcd.clear();//Clean the screen
+
+lcd.setCursor(0,0); //Defining positon to write from first row,first column .
+lcd.print("enter time:"); //You can write 16 Characters per line .
 Serial.print("enter time in milisecond and press A: ");
 i=0;
 key=0;
@@ -71,7 +83,7 @@ key=0;
      // Serial.println("not number");
     goto notnum;
     }
-    
+    lcd.print(key);
     Serial.print(key);
     num[i]=key-0x30;
     i++;
@@ -126,12 +138,21 @@ if(maxNum==0){
 
 
 do{
+lcd.clear();//Clean the screen
+lcd.setCursor(0,0); 
+lcd.print("time:");
+ lcd.print(masa);
+  lcd.setCursor(0,1); 
+ lcd.print("<, > or reset?");
+
+ 
 Serial.println(" left, right or reset? :");
 do{
   key = keypad.getKey();
   
   delay(1);
  }while(key==NO_KEY);
+ lcd.print(key);
 Serial.println(key);
  if(key=='*'){
   digitalWrite(inp1, HIGH);
