@@ -110,7 +110,7 @@ Serial.println("----- ");
   lcd.print(userid);
 //======
 
-  spreadsheet_comm(userid);
+  connectToGoogle(userid);
   Serial.println("waiting for next scan...");
 
   //=====
@@ -123,22 +123,22 @@ Serial.println("----- ");
 
 
 
-void spreadsheet_comm(String userId) {
+void connectToGoogle(String userId) {
    
    HTTPClient http;
    
    String url="https://script.google.com/macros/s/"+GOOGLE_SCRIPT_ID+"/exec?value1="+userId;
    Serial.println(url);
-	 Serial.println("Making a request"); 
+   Serial.println("Making a request"); 
    
       lcd.setCursor(0,1);   //
       lcd.print("Sending request");
 
-	http.begin(url.c_str()); //Specify the URL
-  http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
-	int httpCode = http.GET();
+   http.begin(url.c_str()); //Specify the URL
+   http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
+   int httpCode = http.GET();
 //=============================================
-  String payload;
+   String payload;
     if (httpCode > 0) { //Check for the returning code
         payload = http.getString();
         
@@ -158,7 +158,7 @@ void spreadsheet_comm(String userId) {
       lcd.setCursor(0,1);   //
       lcd.print("HTTP request");
     }
-	http.end();
+      http.end();
 
 //=================================================  
 }
